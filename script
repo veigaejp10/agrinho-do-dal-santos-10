@@ -1,0 +1,162 @@
+document.addEventListener('DOMContentLoaded', () => {
+    
+    // ==========================================
+    // 1. SEÇÕES EXPANSÍVEIS (ACCORDION)
+    // ==========================================
+    const headersAccordion = document.querySelectorAll('.accordion-header');
+    
+    headersAccordion.forEach(header => {
+        header.addEventListener('click', function() {
+            const itemAtual = this.parentElement;
+            const estaAtivo = itemAtual.classList.contains('ativo');
+            
+            // Fecha todos os itens abertos (Comportamento sanfona legítimo)
+            document.querySelectorAll('.accordion-item').forEach(item => {
+                item.classList.remove('ativo');
+            });
+            
+            // Se o clicado não estava ativo, abre ele
+            if (!estaAtivo) {
+                itemAtual.classList.add('ativo');
+            }
+        });
+    });
+
+    // ==========================================
+    // 2. FORMULÁRIO DE INSCRIÇÃO DO SEMINÁRIO
+    // ==========================================
+    const formSeminario = document.getElementById('form-seminario');
+    
+    formSeminario.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const nome = document.getElementById('nome').value;
+        const email = document.getElementById('email').value;
+        
+        // Simulação de cadastro bem-sucedido
+        alert(`Parabéns, ${nome}! Sua inscrição para o seminário online foi realizada com sucesso. Enviamos os detalhes de acesso para o e-mail: ${email}.`);
+        
+        formSeminario.reset();
+    });
+
+    // ==========================================
+    // 3. INTERAÇÃO DE COMENTÁRIOS DO LEITOR
+    // ==========================================
+    const formComentario = document.getElementById('form-comentario');
+    const caixaTextoComentario = document.getElementById('txt-comentario');
+    const listaComentarios = document.getElementById('lista-comentarios');
+    
+    formComentario.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const texto = caixaTextoComentario.value.trim();
+        if (texto === '') return;
+        
+        // Criar elemento dinamicamente
+        const novoComentario = document.createElement('div');
+        novoComentario.classList.add('item-comentario');
+        
+        // Formatar data/hora de envio
+        const dataAtual = new Date().toLocaleDateString('pt-BR', {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        
+        novoComentario.innerHTML = `
+            <p>${texto}</p>
+            <small style="display:block; margin-top:0.5rem; color:var(--texto-mutado);">Enviado por Leitor Anonimizado às ${dataAtual}</small>
+        `;
+        
+        // Inserir no topo da lista
+        listaComentarios.insertBefore(novoComentario, listaComentarios.firstChild);
+        
+        // Limpar campo
+        caixaTextoComentario.value = '';
+    });
+
+    // ==========================================
+    // 4. CAIXA DE ACESSIBILIDADE MOTOR / VISUAL
+    // ==========================================
+    
+    // Controle do tamanho de Fonte
+    let nivelFonte = 100; // Porcentagem padrão
+    const btnAumentar = document.getElementById('btn-aumentar');
+    const btnDiminuir = document.getElementById('btn-diminuir');
+    
+    btnAumentar.addEventListener('click', () => {
+        if (nivelFonte < 130) { // Limite máximo seguro
+            nivelFonte += 10;
+            document.documentElement.style.fontSize = `${nivelFonte}%`;
+        }
+    });
+    
+    btnDiminuir.addEventListener('click', () => {
+        if (nivelFonte > 85) { // Limite mínimo seguro
+            nivelFonte -= 10;
+            document.documentElement.style.fontSize = `${nivelFonte}%`;
+        }
+    });
+
+    // Alternador de Tema Escuro / Claro
+    const btnTema = document.getElementById('btn-tema');
+    btnTema.addEventListener('click', () => {
+        const temaAtual = document.documentElement.getAttribute('data-theme');
+        if (temaAtual === 'dark') {
+            document.documentElement.removeAttribute('data-theme');
+        } else {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        }
+    });
+
+    // ==========================================
+    // 5. ACESSIBILIDADE DIGITAL: TEXT-TO-SPEECH (VOZ)
+    // ==========================================
+    const btnFalar = document.getElementById('btn-falar');
+    const btnParar = document.getElementById('btn-parar');
+    
+    let sinteseVoz = window.speechSynthesis;
+    let elocucaoAtual = null;
+
+    btnFalar.addEventListener('click', () => {
+        // Coleta apenas o conteúdo principal para leitura fluida conforme pedido
+        const conteudoParaLer = document.getElementById('conteudo-principal').innerText;
+        
+        if (sinteseVoz.speaking) {
+            sinteseVoz.cancel(); // Reinicia se já estiver rodando
+        }
+        
+        elocucaoAtual = new SpeechSynthesisUtterance(conteudoParaLer);
+        elocucaoAtual.lang = 'pt-BR';
+        elocucaoAtual.rate = 1.0; // Velocidade padrão de fala natural
+        
+        // Controle de estados de botões
+        elocucaoAtual.onstart = () => {
+            btnFalar.innerText = "🗣️ Lendo...";
+            btnFalar.disabled = true;
+            btnParar.disabled = false;
+        };
+        
+        elocucaoAtual.onend = () => {
+            resetarBotoesVoz();
+        };
+        
+        elocucaoAtual.onerror = () => {
+            resetarBotoesVoz();
+        };
+
+        sinteseVoz.speak(elocucaoAtual);
+    });
+
+    btnParar.addEventListener('click', () => {
+        if (sinteseVoz.speaking) {
+            sinteseVoz.cancel();
+            resetarBotoesVoz();
+        }
+    });
+
+    function resetarBotoesVoz() {
+        btnFalar.innerText = "🔊 Ler";
+        btnFalar.disabled = false;
+        btnParar.disabled = true;
+    }
+});

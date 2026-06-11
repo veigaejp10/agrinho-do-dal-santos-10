@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O Agro é o Futuro e o Presente | Conectando Campo e Cidade</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="caixa-acessibilidade" aria-label="Menu de Acessibilidade" role="region">
+        <button id="btn-aumentar" title="Aumentar Fonte">A+</button>
+        <button id="btn-diminuir" title="Diminuir Fonte">A-</button>
+        <button id="btn-tema" title="Alternar Modo Escuro/Claro">🌓</button>
+        <button id="btn-falar" title="Ouvir Conteúdo">🔊 Ler</button>
+        <button id="btn-parar" title="Parar Leitura" disabled>⏹️ Parar</button>
+    </div>
+
+    <header class="header-principal">
+        <div class="container header-container">
+            <div class="logo">Agro<span>Futuro</span></div>
+            <nav class="nav-principal">
+                <a href="#inicio">Início</a>
+                <a href="#sobre">União</a>
+                <a href="#inovacao">Inovação</a>
+                <a href="#inscricao">Seminário</a>
+            </nav>
+        </div>
+    </header>
+
+    <section id="inicio" class="section-hero">
+        <div class="container hero-container">
+            <div class="hero-conteudo">
+                <h1>O Agro é o futuro e o presente.</h1>
+                <p class="subtitulo">A revolução digital chegou à terra. Descubra como a inteligência artificial, automação e dados estão moldando uma produção sustentável, eficiente e integrada entre o campo e a cidade.</p>
+                <a href="#inscricao" class="btn btn-laranja">Participar do Seminário</a>
